@@ -1976,9 +1976,9 @@ agg[r.ram][r.seg].act += act;
   });
   rows.sort((a,b)=>b.vs-a.vs);
 
-  var vsT=tPy>0?(tAct-tPy)/tPy:0; var vbT=tBp>0?(tAct-tBp)/tBp:0; var above=rows.filter(r=>r.vs>0).length;
+  var vsT=tPy>0?(tAct-tPy)/tPy:0; var vbT=tBp>0?(tAct-tBp)/tBp:0; var above=rows.filter(r=>r.vb>=0).length; var belowBP=rows.length-above;
   var segLabel=(segPick==='all')?'All Segments':(segPick==='Big3'?'At Work/B&I/HC':segPick==='Trvl'?'Travel':segPick==='CU'?'Collegiate':'Vending');
-  document.getElementById('VPM').innerHTML = mkMC('Total Volume', fmt(tAct), pct(vsT)+' vs PY','',vc(vsT)) + mkMC('vs Business Plan', pct(vbT), 'BP: '+fmt(tBp), vc(vbT),'') + mkMC('NCRAMs Above PY', above+' / '+rows.length, 'Growth positive','', 'pos') + mkMC('Segment', segLabel, 'Filter','','');
+  document.getElementById('VPM').innerHTML = mkMC('Total Volume', fmt(tAct), pct(vsT)+' vs PY','',vc(vsT)) + mkMC('vs Business Plan', pct(vbT), 'BP: '+fmt(tBp), vc(vbT),'') + mkMC('NCRAMs Above BP', above+' / '+rows.length, belowBP ? belowBP+' below business plan' : 'All at or above plan','', belowBP ? 'neg' : 'pos') + mkMC('Segment', segLabel, 'Filter','','');
 
   var tr='';
   rows.forEach((r,i)=>{ tr += mkRow5([{v:'<span class="rn">#'+(i+1)+'</span>'},{v:dot(r.c)+r.ram+'<br><span style="font-size:10px;color:#888780">'+r.reg+'</span>'},{v:fmt(r.act),r:1},{v:fmt(r.py),r:1},{v:fmt(r.bp),r:1},{v:bdg(r.vs>=0?'bG':'bR',pct(r.vs)),r:1},{v:bdg(r.vb>=0?'bG':'bR',pct(r.vb)),r:1}]); });
