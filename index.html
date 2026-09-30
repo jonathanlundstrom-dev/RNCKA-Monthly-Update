@@ -281,15 +281,6 @@ tr:hover td{background:#fafaf8}
     <div class="ct">Volume Performance Rankings <span style="font-size:10px;font-weight:400;color:#73726c">&mdash; YTD Through August vs PY &amp; Business Plan</span></div>
     <div style="overflow-x:auto"><table id="VPRT"></table></div>
   </div>
-  <div class="twoc" style="margin-top:14px">
-    <div class="card" id="VPCard_Big3"><div class="ct">At Work/B&amp;I/HC &mdash; % vs PY by NCRAM</div><div class="cw"><canvas id="VPB3"></canvas></div></div>
-    <div class="card" id="VPCard_Vend"><div class="ct">Vending &mdash; % vs PY by NCRAM</div><div class="cw"><canvas id="VPV"></canvas></div></div>
-  </div>
-  <div class="twoc" style="margin-top:14px">
-    <div class="card" id="VPCard_CU"><div class="ct">Collegiate &mdash; % vs PY by NCRAM</div><div class="cw"><canvas id="VPCU"></canvas></div></div>
-    <div class="card" id="VPCard_Trvl"><div class="ct">Travel &mdash; % vs PY by NCRAM</div><div class="cw"><canvas id="VPT"></canvas></div></div>
-  </div>
-
   <!-- VOLUME INSIGHTS -->
   <div class="vi-hd"><h2>Volume Insights</h2><span id="VIsub"></span></div>
   <div class="vi-grid" id="VIMacro"></div>
@@ -1984,32 +1975,6 @@ agg[r.ram][r.seg].act += act;
   rows.forEach((r,i)=>{ tr += mkRow5([{v:'<span class="rn">#'+(i+1)+'</span>'},{v:dot(r.c)+r.ram+'<br><span style="font-size:10px;color:#888780">'+r.reg+'</span>'},{v:fmt(r.act),r:1},{v:fmt(r.py),r:1},{v:fmt(r.bp),r:1},{v:bdg(r.vs>=0?'bG':'bR',pct(r.vs)),r:1},{v:bdg(r.vb>=0?'bG':'bR',pct(r.vb)),r:1}]); });
   document.getElementById('VPRT').innerHTML='<thead><tr><th>Rank</th><th>NCRAM</th><th class="r">ACT</th><th class="r">PY</th><th class="r">BP</th><th class="r">vs PY</th><th class="r">vs BP</th></tr></thead><tbody>'+(tr||'<tr><td colspan="7" style="text-align:center;color:#888780;padding:16px">No data for selection</td></tr>')+'</tbody>';
 
-  function setCard(id,on){var el=document.getElementById(id); if(el) el.style.display=on?'':'none';}
-  setCard('VPCard_Big3', segPick==='all' || segPick==='Big3');
-  setCard('VPCard_Vend', segPick==='all' || segPick==='Vend');
-  setCard('VPCard_CU', segPick==='all' || segPick==='CU');
-  setCard('VPCard_Trvl', segPick==='all' || segPick==='Trvl');
-
-  function segChart(canvasId, segKey, label){
-    dc(canvasId);
-    var arr=[];
-    for(var i=0;i<ncrams.length;i++){
-      var nm=ncrams[i];
-      var g=(agg[nm] && agg[nm][segKey]) ? agg[nm][segKey] : {act:0,py:0};
-      var vs=g.py>0?(g.act-g.py)/g.py:0;
-      arr.push({nm:nm,vs:vs});
-    }
-    arr.sort((a,b)=>b.vs-a.vs);
-    var ctx=document.getElementById(canvasId);
-    if(!ctx) return;
-    CH[canvasId]=new Chart(ctx,{type:'bar',data:{labels:arr.map(d=>d.nm.split(' ')[0]),datasets:[{data:arr.map(d=>Math.round(d.vs*100)),backgroundColor:arr.map(d=>d.vs>=0?'#1D9E75':'#E24B4A'),borderRadius:4}]},
-      options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{datalabels:{display:false},legend:{display:false}},scales:{x:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{callback:v=>v+'%'}},y:{grid:{display:false},ticks:{font:{size:10}}}}}});
-  }
-
-  if(segPick==='all' || segPick==='Big3') segChart('VPB3','Big3','At Work/B&I/HC'); else dc('VPB3');
-  if(segPick==='all' || segPick==='Vend') segChart('VPV','Vend','Vending'); else dc('VPV');
-  if(segPick==='all' || segPick==='CU') segChart('VPCU','CU','Collegiate'); else dc('VPCU');
-  if(segPick==='all' || segPick==='Trvl') segChart('VPT','Trvl','Travel'); else dc('VPT');
   try{ renderVolInsights(); }catch(e){ console.error('Volume insights', e); }
 }
 
